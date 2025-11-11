@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿一覧</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>投稿一覧</h1>
+    <p>現在の投稿数: {{count}}件</p>
+
+    <div class="posts-container">
+        {{posts}}
+    </div>
+
+    <div class="actions">
+        <a href="/new" class="btn">新規投稿</a>
+    </div>
+</div>
+</body>
+</html>
