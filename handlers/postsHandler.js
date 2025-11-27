@@ -2,12 +2,41 @@
 const fs = require('fs');
 // ファイルパスを扱うための機能
 const path = require('path');
+// URLエンコードされたデータを解析
+const querystring = require('querystring');
+// レスポンス
+const Response = require('../utils/response');
+
+// 投稿データを保存する配列（本来はデータベースを使用）
+let posts = [];
+
+// HTMLエスケープ関数
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, char => map[char]);
+}
+
+// テンプレートを置換する関数
+function renderTemplate(template, data) {
+    let result = template;
+    for (const key in data) {
+        const placeholder = new RegExp(`{{${key}}}`, 'g');
+        result = result.replace(placeholder, data[key]);
+    }
+    return result;
+}
 
 // 投稿一覧を表示する関数
 function showPostsList(req, res) {
     fs.readFile("./views/index.html", "utf-8", (err, template) => {
         if (err) {
-            sendServerError(res);
+            Response.serverError(res);
             return;
         }
 
@@ -30,18 +59,18 @@ function showPostsList(req, res) {
             count: posts.length
         });
 
-        sendOk(res, html);
+        Response.ok(res, html);
     });
 }
 
 // 投稿フォームを表示する関数
-function showPostForm(req, res) {
+function PostForm(req, res) {
     fs.readFile("./views/form.html", "utf-8", (err, html) => {
         if (err) {
-            sendServerError(res);
+            Response.serverError(res);
             return;
         }
-        sendOk(res, html);
+        Response.ok(res, html);
     });
 }
 
@@ -57,7 +86,7 @@ function createPost(req, res) {
         const data = querystring.parse(body);
 
         if (!data.name || !data.message) {
-            sendBadRequest(res, '<h1>エラー</h1><p>名前とメッセージを入力してください</p>');
+            Response.badRequest(res, '<h1>エラー</h1><p>名前とメッセージを入力してください</p>');
             return;
         }
 
@@ -69,14 +98,13 @@ function createPost(req, res) {
         };
 
         posts.push(newPost);
-        sendRedirect(res, "/");
+        Response.redirect(res, "/");
     });
 }
 
-// ⭐ レスポンスヘルパーを読み込む
-const {
-    sendOk,
-    sendRedirect,
-    sendBadRequest,
-    sendServerError
-} = require('../helper/responseHelper');
+// 関数をエクスポート
+module.exports = {
+    showPostsList,
+    PostForm,
+    createPost
+};

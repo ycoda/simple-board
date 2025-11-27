@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投稿一覧</title>
+    <title>簡易掲示板</title>
     <link rel="stylesheet" href="/public/style.css">
 </head>
 <body>
 <div class="container">
-    <h1>投稿一覧</h1>
-    <p>現在の投稿数: {{count}}件</p>
+    <h1>簡易掲示板</h1>
 
-    <div class="posts-container">
+    <div class="header-actions">
+        <a href="/new" class="btn-primary">新規投稿</a>
+        <span class="post-count">投稿数: {{count}}</span>
+    </div>
+
+    <div class="posts-list">
         {{posts}}
     </div>
 
-    <div class="actions">
-        <a href="/new" class="btn">新規投稿</a>
+    <div class="empty-state" style="display: {{count}} === 0 ? 'block' : 'none';">
+        <p>まだ投稿がありません。最初の投稿をしてみましょう！</p>
     </div>
 </div>
 </body>

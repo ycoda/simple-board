@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const Response = require('../utils/response');
+const Response = require('./response');
 
 // 静的ファイルを提供する関数
 function serveStaticFile(pathname, res) {
